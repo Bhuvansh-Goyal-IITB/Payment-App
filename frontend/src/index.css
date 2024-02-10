@@ -1,0 +1,50 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  @apply p-0 m-0 box-border;
+}
+
+html,
+body {
+  @apply w-full h-full;
+}
+
+@layer components {
+  .bg-gradient-light {
+    @apply bg-gradient-to-br from-stone-400 to-stone-600;
+  }
+
+  .bg-gradient-dark {
+    @apply bg-gradient-to-br from-stone-700 to-stone-900;
+  }
+
+  .text-gradient-neutral-100 {
+    @apply bg-gradient-to-b from-neutral-100 to-neutral-300 font-bold text-transparent bg-clip-text;
+  }
+
+  .text-gradient-neutral-200 {
+    @apply bg-gradient-to-b from-neutral-200 to-neutral-400 font-bold text-transparent bg-clip-text;
+  }
+
+  .text-gradient-neutral-300 {
+    @apply bg-gradient-to-b from-neutral-300 to-neutral-500 font-bold text-transparent bg-clip-text;
+  }
+
+  .text-gradient-neutral-400 {
+    @apply bg-gradient-to-b from-neutral-400 to-neutral-600 font-bold text-transparent bg-clip-text;
+  }
+
+  .text-gradient-neutral-500 {
+    @apply bg-gradient-to-b from-neutral-500 to-neutral-700 font-bold text-transparent bg-clip-text;
+  }
+
+  .text-gradient-neutral-600 {
+    @apply bg-gradient-to-b from-neutral-600 to-neutral-800 font-bold text-transparent bg-clip-text;
+  }
+
+  .text-gradient-neutral-700 {
+    @apply bg-gradient-to-b from-neutral-700 to-neutral-900 font-bold text-transparent bg-clip-text;
+  }
+}
