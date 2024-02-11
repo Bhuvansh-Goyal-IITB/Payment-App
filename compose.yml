@@ -1,10 +1,12 @@
 services:
   mongo:
-    image: mongo:latest
+    image: replica-mongo
     ports:
       - 27017:27017
     volumes:
-      - mongo-data:/data/db
+      - paytm-db:/data/db
 
 volumes:
-  mongo-data:
+  paytm-db:
+    external: true
+

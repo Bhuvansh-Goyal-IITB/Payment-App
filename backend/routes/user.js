@@ -34,6 +34,12 @@ userRouter.get("/profile", authMiddleware, async (req, res) => {
   }
 });
 
+userRouter.get("/logout", authMiddleware, async (_req, res) => {
+  return res.clearCookie("jwt").json({
+    message: "User logged out",
+  });
+});
+
 userRouter.get("/bulk", async (req, res) => {
   try {
     await connectToDB();
@@ -47,7 +53,7 @@ userRouter.get("/bulk", async (req, res) => {
           { lastName: { $regex: query, $options: "i" } },
         ],
       },
-      ["firstName", "lastName", "_id"],
+      ["email", "firstName", "lastName", "_id"],
       {
         limit: 10,
       },
@@ -216,8 +222,12 @@ userRouter.post("/login", async (req, res) => {
       });
     }
 
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET);
+
+    res.cookie("jwt", token, { httpOnly: true, maxAge: 1000 * 60 * 60 });
+
     return res.json({
-      token: jwt.sign({ userId: user._id }, process.env.JWT_SECRET),
+      token,
     });
   } catch (error) {
     return res.status(500).json({

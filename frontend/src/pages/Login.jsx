@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Button from "../components/Button";
 import LargeText from "../components/LargeText";
 import SmallText from "../components/SmallText";
@@ -7,6 +7,7 @@ import FormInput from "../components/FormInput";
 import Backdrop from "../components/Backdrop";
 import { useForm } from "react-hook-form";
 import FormError from "../components/FormError";
+import axios from "axios";
 
 function Login() {
   const {
@@ -15,9 +16,18 @@ function Login() {
     formState: { errors, isSubmitting },
   } = useForm();
 
+  const navigate = useNavigate();
+
   async function onSubmit(data) {
-    console.log(data);
+    try {
+      await axios.post("/api/v1/user/login", data);
+      localStorage.setItem("loggedin", true);
+      navigate("/");
+    } catch (error) {
+      localStorage.removeItem("loggedin");
+    }
   }
+
   return (
     <Backdrop>
       <CustomForm onSubmit={handleSubmit(onSubmit)} noValidate={true}>
@@ -27,9 +37,8 @@ function Login() {
           <div className="flex flex-col gap-1">
             <FormInput
               type="email"
-              label="email"
+              id="email"
               placeholder="Email"
-              aria-invalid={errors.email ? "true" : "false"}
               {...register("email", {
                 required: true,
                 pattern: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/,
@@ -51,15 +60,11 @@ function Login() {
           <div className="flex flex-col gap-1">
             <FormInput
               type="password"
-              label="password"
+              id="password"
               placeholder="Password"
               autoComplete="current-password"
-              aria-invalid={errors.password ? "true" : "false"}
               {...register("password", {
                 required: true,
-                minLength: 8,
-                pattern:
-                  /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).*$/,
               })}
             />
             <FormError
@@ -68,20 +73,16 @@ function Login() {
                   condition: errors.password?.type == "required",
                   message: "Password is required.",
                 },
-                {
-                  condition: errors.password?.type == "minLength",
-                  message: "Password must be at least 8 characters long.",
-                },
-                {
-                  condition: errors.password?.type == "pattern",
-                  message:
-                    "Please choose a stronger password. Try a mix of letter, numbers, and symbols.",
-                },
               ]}
             />
           </div>
           <Button type="submit" disabled={isSubmitting}>
-            Login
+            <div className="flex w-full items-center justify-center gap-2">
+              {isSubmitting && (
+                <div className="h-4 w-4 rounded-full animate-spin border-[2px] border-t-transparent border-white" />
+              )}
+              Login
+            </div>
           </Button>
           <div className="flex justify-center gap-1">
             Dont have an account ?

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import UserListLoading from "./UserListLoading";
 import UserListItem from "./UserListItem";
 
-function UserList({ deferredQuery, query }) {
+function UserList({ userEmail, deferredQuery, query }) {
   let [loading, setLoading] = useState(true);
   let [users, setUsers] = useState([]);
 
@@ -20,7 +20,7 @@ function UserList({ deferredQuery, query }) {
     const controller = new AbortController();
     const signal = controller.signal;
 
-    fetch(`http://localhost:3000/api/v1/user/bulk?filter=${query}`, { signal })
+    fetch(`/api/v1/user/bulk?filter=${query}`, { signal })
       .then((res) => res.json())
       .then((data) => {
         setUsers(data.users);
@@ -36,10 +36,18 @@ function UserList({ deferredQuery, query }) {
     return <UserListLoading />;
   }
   return (
-    <div className="flex flex-col gap-1">
-      {users.map(({ firstName, lastName, _id }) => (
-        <UserListItem key={_id} firstName={firstName} lastName={lastName} />
-      ))}
+    <div className="flex flex-col rounded-md divide-y overflow-clip">
+      {users
+        .filter(({ email }) => email != userEmail)
+        .map(({ email, firstName, lastName, _id }) => (
+          <UserListItem
+            key={_id}
+            stale={query != deferredQuery}
+            firstName={firstName}
+            lastName={lastName}
+            email={email}
+          />
+        ))}
     </div>
   );
 }

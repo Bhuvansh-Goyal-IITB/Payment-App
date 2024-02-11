@@ -5,13 +5,17 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "buildFrontend": "cd ../frontend && npm run build && cd ../backend && pwd",
+    "devStart": "nodemon index.js",
+    "buildProdStart": "npm run buildFrontend && npm run prodStart",
+    "prodStart": "NODE_ENV=production nodemon index.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^5.1.1",
+    "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "dotenv": "^16.4.1",
     "express": "^4.18.2",
