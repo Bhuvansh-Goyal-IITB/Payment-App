@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import UserListLoading from "./UserListLoading";
 import UserListItem from "./UserListItem";
+import axios from "axios";
 
 function UserList({ userEmail, deferredQuery, query }) {
   let [loading, setLoading] = useState(true);
@@ -20,14 +21,15 @@ function UserList({ userEmail, deferredQuery, query }) {
     const controller = new AbortController();
     const signal = controller.signal;
 
-    fetch(`/api/v1/user/bulk?filter=${query}`, { signal })
-      .then((res) => res.json())
-      .then((data) => {
-        setUsers(data.users);
+    axios
+      .get(`/api/v1/user/bulk?filter=${query}`, { signal })
+      .then(({ data: { users } }) => {
+        setUsers(users);
       })
       .catch((_) => {});
 
     return () => {
+      console.log("Abort");
       controller.abort();
     };
   }, [query]);

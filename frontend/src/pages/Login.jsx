@@ -8,6 +8,8 @@ import Backdrop from "../components/Backdrop";
 import { useForm } from "react-hook-form";
 import FormError from "../components/FormError";
 import axios from "axios";
+import toast from "react-hot-toast";
+import SpinnerText from "../components/SpinnerText";
 
 function Login() {
   const {
@@ -20,10 +22,13 @@ function Login() {
 
   async function onSubmit(data) {
     try {
+      await new Promise((r) => setTimeout(r, 5000));
       await axios.post("/api/v1/user/login", data);
       localStorage.setItem("loggedin", true);
+      toast.success("Logged in successfully!");
       navigate("/");
     } catch (error) {
+      toast.error("Server Error !");
       localStorage.removeItem("loggedin");
     }
   }
@@ -77,16 +82,15 @@ function Login() {
             />
           </div>
           <Button type="submit" disabled={isSubmitting}>
-            <div className="flex w-full items-center justify-center gap-2">
-              {isSubmitting && (
-                <div className="h-4 w-4 rounded-full animate-spin border-[2px] border-t-transparent border-white" />
-              )}
-              Login
-            </div>
+            <SpinnerText loading={isSubmitting}>Login</SpinnerText>
           </Button>
           <div className="flex justify-center gap-1">
             Dont have an account ?
-            <Link to="/signup" className="underline">
+            <Link
+              to={isSubmitting ? "#" : "/signup"}
+              aria-disabled={isSubmitting}
+              className="aria-disabled:cursor-not-allowed underline"
+            >
               Sign Up
             </Link>
           </div>

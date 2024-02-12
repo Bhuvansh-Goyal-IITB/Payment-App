@@ -2,13 +2,22 @@ import { memo } from "react";
 
 const UserCard = memo(({ balance, firstName, lastName, email }) => {
   return (
-    <div className="flex flex-col justify-center md:justify-evenly gap-4 w-full bg-white pl-8 xl:pl-12 p-5 rounded-md shadow-md">
+    <div className="hidden sm:flex flex-col justify-center md:justify-evenly gap-4 w-full bg-white pl-6 xl:pl-8 p-5 rounded-md shadow-md">
       <div className="flex flex-col font-serif text-center sm:text-left ">
-        <div className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl">
-          {firstName} {lastName}
-        </div>
-        <div className="text-center sm:text-left text-sm md:text-md lg:text-lg xl:text-xl text-neutral-400">
-          {email}
+        <div className="flex justify-between pr-4">
+          <div>
+            <div className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl">
+              {firstName} {lastName}
+            </div>
+            <div className="text-center sm:text-left text-sm md:text-md lg:text-lg xl:text-xl text-neutral-400">
+              {email}
+            </div>
+          </div>
+          <div className="text-sm md:text-md lg:text-lg xl:text-xl text-stone-700">
+            <div className="hover:cursor-pointer hover:text-black hover:underline">
+              Logout
+            </div>
+          </div>
         </div>
       </div>
       <div className="flex items-center sm:justify-start justify-center gap-2">

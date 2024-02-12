@@ -5,7 +5,7 @@ function LogoCard() {
     <div className="bg-gradient-dark p-6 flex justify-center items-center rounded-md shadow-md w-full">
       <svg
         viewBox="0 0 250 171.34726367719236"
-        className="w-32 md:w-48 lg:w-56 xl:w-72 looka-1j8o68f"
+        className="w-36 md:w-48 lg:w-56 xl:w-72 looka-1j8o68f"
       >
         <defs id="SvgjsDefs3472"></defs>
         <g

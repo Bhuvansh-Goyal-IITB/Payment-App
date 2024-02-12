@@ -1,6 +1,5 @@
-import { useDeferredValue, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import SearchBar from "../components/SearchBar";
-import Topbar from "../components/Topbar";
 import UserList from "../components/UserList";
 import axios from "axios";
 import UserCard from "../components/UserCard";
@@ -12,7 +11,6 @@ function Dashboard() {
   let [balance, setBalance] = useState("");
   let [userProfile, setUserProfile] = useState({});
   let debounceQuery = useDebounceValue(query, 400);
-  let deferredQuery = useDeferredValue(debounceQuery);
 
   useEffect(() => {
     axios.get("/api/v1/account/balance").then(({ data: { balance } }) => {
@@ -31,7 +29,7 @@ function Dashboard() {
           <LogoCard />
           <UserCard balance={balance} {...userProfile} />
         </div>
-        <div className="flex flex-col overflow-clip rounded-md">
+        <div className="hidden sm:flex flex-col overflow-clip rounded-md">
           <SearchBar
             placeholder="Search users"
             value={query}

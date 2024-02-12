@@ -8,12 +8,14 @@ import FormInput from "../components/FormInput";
 import FormError from "../components/FormError";
 import { useForm } from "react-hook-form";
 import axios from "axios";
+import SpinnerText from "../components/SpinnerText";
+import toast from "react-hot-toast";
 
 function SignUp() {
   const {
     register,
     handleSubmit,
-    formState: { errors, formState },
+    formState: { errors, isSubmitting },
   } = useForm();
 
   const navigate = useNavigate();
@@ -22,9 +24,10 @@ function SignUp() {
     try {
       await axios.post("/api/v1/user/signup", data);
       localStorage.setItem("loggedin", true);
+      toast.success("Account created successfully!");
       navigate("/");
     } catch (error) {
-      console.log(error);
+      toast.error("Server Error!");
       localStorage.removeItem("loggedin");
     }
   }
@@ -155,10 +158,16 @@ function SignUp() {
               ]}
             />
           </div>
-          <Button type="submit">Sign Up</Button>
+          <Button type="submit">
+            <SpinnerText loading={isSubmitting}>Sign Up</SpinnerText>
+          </Button>
           <div className="flex justify-center gap-1">
             Already have an account ?
-            <Link to="/login" className="underline">
+            <Link
+              to={isSubmitting ? "#" : "/login"}
+              aria-disabled={isSubmitting}
+              className="aria-disabled:cursor-not-allowed underline"
+            >
               Login
             </Link>
           </div>
