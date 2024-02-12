@@ -1,6 +1,6 @@
 function Backdrop({ children }) {
   return (
-    <div className="flex justify-center items-center bg-gradient-light h-full">
+    <div className="flex justify-center items-center bg-gradient-medium h-full">
       {children}
     </div>
   );

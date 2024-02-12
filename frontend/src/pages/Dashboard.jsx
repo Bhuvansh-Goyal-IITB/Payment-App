@@ -5,6 +5,7 @@ import UserList from "../components/UserList";
 import axios from "axios";
 import UserCard from "../components/UserCard";
 import { useDebounceValue } from "../hooks/useDebounceValue";
+import LogoCard from "../components/LogoCard";
 
 function Dashboard() {
   let [query, setQuery] = useState("");
@@ -25,19 +26,23 @@ function Dashboard() {
 
   return (
     <div className="h-full">
-      <Topbar />
-      <div className="flex flex-col gap-2 h-full p-2 bg-gradient-light">
-        <UserCard balance={balance} {...userProfile} />
-        <SearchBar
-          placeholder="Search users"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-        />
-        <UserList
-          userEmail={userProfile.email}
-          query={debounceQuery}
-          deferredQuery={deferredQuery}
-        />
+      <div className="flex flex-col gap-2 h-full p-2 bg-gradient-medium">
+        <div className="flex w-full gap-2">
+          <LogoCard />
+          <UserCard balance={balance} {...userProfile} />
+        </div>
+        <div className="flex flex-col overflow-clip rounded-md">
+          <SearchBar
+            placeholder="Search users"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+          />
+          <UserList
+            userEmail={userProfile.email}
+            query={debounceQuery}
+            deferredQuery={query}
+          />
+        </div>
       </div>
     </div>
   );

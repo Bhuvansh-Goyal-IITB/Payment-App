@@ -12,12 +12,22 @@ body {
 }
 
 @layer components {
-  .bg-gradient-light {
-    @apply bg-gradient-to-br from-stone-400 to-stone-600;
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* For IE, Edge and Firefox */
+  .scrollbar-hide {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
   }
 
   .bg-gradient-dark {
-    @apply bg-gradient-to-br from-stone-700 to-stone-900;
+    @apply bg-gradient-to-br from-neutral-800 to-zinc-900;
+  }
+
+  .bg-gradient-medium {
+    @apply bg-gradient-to-br from-stone-700 to-stone-800;
   }
 
   .text-gradient-neutral-100 {

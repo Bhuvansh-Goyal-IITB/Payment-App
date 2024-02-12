@@ -36,7 +36,7 @@ function UserList({ userEmail, deferredQuery, query }) {
     return <UserListLoading />;
   }
   return (
-    <div className="flex flex-col rounded-md divide-y overflow-clip">
+    <div className="scroll-m-0 flex flex-col grow bg-white divide-y scrollbar-hide overflow-y-scroll">
       {users
         .filter(({ email }) => email != userEmail)
         .map(({ email, firstName, lastName, _id }) => (
