@@ -4,6 +4,7 @@ import { Account, User, connectToDB } from "../db/db.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { authMiddleware } from "../middlewares.js";
+import { COOKIE_EXPIRY_SECONDS } from "../config.js";
 
 const userRouter = Router();
 
@@ -34,7 +35,7 @@ userRouter.get("/profile", authMiddleware, async (req, res) => {
   }
 });
 
-userRouter.get("/logout", authMiddleware, async (_req, res) => {
+userRouter.get("/logout", async (_req, res) => {
   return res.clearCookie("jwt").json({
     message: "User logged out",
   });
@@ -54,9 +55,6 @@ userRouter.get("/bulk", async (req, res) => {
         ],
       },
       ["email", "firstName", "lastName", "_id"],
-      {
-        limit: 10,
-      },
     );
 
     return res.json({
@@ -169,9 +167,16 @@ userRouter.post("/signup", async (req, res) => {
     await session.commitTransaction();
     await session.endSession();
 
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET);
+
+    res.cookie("jwt", token, {
+      httpOnly: true,
+      maxAge: COOKIE_EXPIRY_SECONDS * 1000,
+    });
+
     return res.json({
       message: "User created successfully.",
-      token: jwt.sign({ userId: user._id }, process.env.JWT_SECRET),
+      token,
     });
   } catch (error) {
     if (error.errors) {
@@ -224,7 +229,10 @@ userRouter.post("/login", async (req, res) => {
 
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET);
 
-    res.cookie("jwt", token, { httpOnly: true, maxAge: 1000 * 60 * 60 });
+    res.cookie("jwt", token, {
+      httpOnly: true,
+      maxAge: COOKIE_EXPIRY_SECONDS * 1000,
+    });
 
     return res.json({
       token,

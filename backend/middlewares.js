@@ -2,33 +2,40 @@ import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 dotenv.config();
 
-function serverSideRouting(req, res, next) {
-  let path = "";
-  if (req.path.endsWith("/")) {
-    path = req.path.slice(0, -1);
-  } else {
-    path = req.path;
-  }
-
-  if (!req.headers.authorization && !req.cookies.jwt && path == "") {
-    return res.redirect("/login");
-  }
-
-  const token = req.headers.authorization?.split(" ")[1] || req.cookies.jwt;
-
+function isUserAuthenticated(token) {
   try {
     jwt.verify(token, process.env.JWT_SECRET);
-    if (path == "/login" || path == "/signup") {
+    return true;
+  } catch (error) {
+    return false;
+  }
+}
+
+function serverSideRouting(protectedPaths) {
+  return function (req, res, next) {
+    const isGoingToProtectedPath = protectedPaths.some((path) => {
+      if (path == "/") return req.path == "/";
+      return req.path.startsWith(path);
+    });
+
+    const token =
+      req.headers.authentication?.split(" ")[1] || req.cookies.jwt || "";
+
+    const authenticated = isUserAuthenticated(token);
+
+    if (
+      authenticated &&
+      (req.path.startsWith("/login") || req.path.startsWith("/signup"))
+    ) {
       return res.redirect("/");
     }
-    return next();
-  } catch (error) {
-    if (path == "") {
+
+    if (!authenticated && isGoingToProtectedPath) {
       return res.redirect("/login");
     }
 
     return next();
-  }
+  };
 }
 
 async function authMiddleware(req, res, next) {

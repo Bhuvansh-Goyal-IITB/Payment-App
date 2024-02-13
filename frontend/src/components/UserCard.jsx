@@ -1,6 +1,10 @@
+import axios from "axios";
 import { memo } from "react";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 const UserCard = memo(({ balance, firstName, lastName, email }) => {
+  const navigate = useNavigate();
   return (
     <div className="hidden sm:flex flex-col justify-center md:justify-evenly gap-4 w-full bg-white pl-6 xl:pl-8 p-5 rounded-md shadow-md">
       <div className="flex flex-col font-serif text-center sm:text-left ">
@@ -14,7 +18,20 @@ const UserCard = memo(({ balance, firstName, lastName, email }) => {
             </div>
           </div>
           <div className="text-sm md:text-md lg:text-lg xl:text-xl text-stone-700">
-            <div className="hover:cursor-pointer hover:text-black hover:underline">
+            <div
+              onClick={() => {
+                axios
+                  .get("/api/v1/user/logout")
+                  .then(() => {
+                    toast.success("Logged out successfully!");
+                    navigate("/login");
+                  })
+                  .catch(() => {
+                    toast.error("Server Error!");
+                  });
+              }}
+              className="hover:cursor-pointer hover:text-black hover:underline"
+            >
               Logout
             </div>
           </div>

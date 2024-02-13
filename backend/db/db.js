@@ -13,9 +13,17 @@ async function connectToDB() {
   return await mongoose.connect(process.env.MONGO_URI);
 }
 
+const TransactionSchema = new mongoose.Schema({
+  from: { type: mongoose.SchemaTypes.ObjectId, ref: "User", required: true },
+  to: { type: mongoose.SchemaTypes.ObjectId, ref: "User", required: true },
+  amount: { type: Number, required: true },
+  timestamp: { type: Date, default: Date.now() },
+});
+
 const AccountSchema = new mongoose.Schema({
   user: { type: mongoose.SchemaTypes.ObjectId, ref: "User", required: true },
   balance: { type: Number, default: () => 1 + Math.random() * 9999 },
+  transactions: [{ type: mongoose.SchemaTypes.ObjectId, ref: "Transaction" }],
 });
 
 const UserSchema = new mongoose.Schema({
@@ -82,7 +90,8 @@ UserSchema.pre("findOneAndUpdate", async function (next) {
   }
 });
 
+const Transaction = mongoose.model("Transaction", TransactionSchema);
 const Account = mongoose.model("Account", AccountSchema);
 const User = mongoose.model("User", UserSchema);
 
-export { User, Account, connectToDB };
+export { User, Account, Transaction, connectToDB };

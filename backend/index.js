@@ -14,7 +14,7 @@ app.use(cookieParser());
 app.use("/api/v1", rootRouter);
 
 if (process.env.NODE_ENV == "production") {
-  app.use(serverSideRouting);
+  app.use(serverSideRouting(["/"]));
   app.use(express.static("dist"));
   app.get("*", (_req, res) => {
     return res.sendFile("index.html", { root: "./dist" });

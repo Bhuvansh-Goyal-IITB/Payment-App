@@ -27,7 +27,7 @@ function SignUp() {
       toast.success("Account created successfully!");
       navigate("/");
     } catch (error) {
-      toast.error("Server Error!");
+      toast.error(error.response.data.message);
       localStorage.removeItem("loggedin");
     }
   }
@@ -119,7 +119,7 @@ function SignUp() {
                   message: "First name must be between 3 and 30 characters.",
                 },
                 {
-                  condition: errors.password?.type == "pattern",
+                  condition: errors.firstName?.type == "pattern",
                   message: "First name can only contain alphabets.",
                 },
               ]}
@@ -140,19 +140,19 @@ function SignUp() {
             <FormError
               elementList={[
                 {
-                  condition: errors.firstName?.type == "required",
+                  condition: errors.lastName?.type == "required",
                   message: "Last name is required.",
                 },
                 {
-                  condition: errors.firstName?.type == "minLength",
+                  condition: errors.lastName?.type == "minLength",
                   message: "Last name must be between 3 and 30 characters.",
                 },
                 {
-                  condition: errors.firstName?.type == "maxLength",
+                  condition: errors.lastName?.type == "maxLength",
                   message: "Last name must be between 3 and 30 characters.",
                 },
                 {
-                  condition: errors.password?.type == "pattern",
+                  condition: errors.lastName?.type == "pattern",
                   message: "Last name can only contain alphabets.",
                 },
               ]}

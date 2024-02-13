@@ -29,7 +29,6 @@ function UserList({ userEmail, deferredQuery, query }) {
       .catch((_) => {});
 
     return () => {
-      console.log("Abort");
       controller.abort();
     };
   }, [query]);

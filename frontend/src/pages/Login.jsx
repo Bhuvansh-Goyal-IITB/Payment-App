@@ -22,13 +22,12 @@ function Login() {
 
   async function onSubmit(data) {
     try {
-      await new Promise((r) => setTimeout(r, 5000));
       await axios.post("/api/v1/user/login", data);
       localStorage.setItem("loggedin", true);
       toast.success("Logged in successfully!");
       navigate("/");
     } catch (error) {
-      toast.error("Server Error !");
+      toast.error(error.response.data.message);
       localStorage.removeItem("loggedin");
     }
   }
