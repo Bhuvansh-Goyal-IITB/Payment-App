@@ -5,10 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "buildFrontend": "cd ../frontend && npm run build && cd ../backend",
-    "devStart": "nodemon index.js",
-    "buildProdStart": "npm run buildFrontend && npm run prodStart",
-    "prodStart": "NODE_ENV=production node index.js"
+    "dev": "nodemon index.js"
   },
   "keywords": [],
   "author": "",

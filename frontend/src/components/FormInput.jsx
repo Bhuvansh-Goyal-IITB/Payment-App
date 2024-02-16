@@ -9,7 +9,7 @@ const FormInput = forwardRef(({ type, ...rest }, ref) => {
     <div className="flex flex-col gap-1 relative">
       <input
         type={inputType}
-        className="text-slate-700 p-2 rounded-[0.2rem] border-neutral-300 border-[1px] focus:outline-blue-500"
+        className="dark:bg-neutral-800 dark:text-neutral-200 text-neutral-700 p-2 rounded-[0.2rem] dark:border-neutral-700 border-neutral-300 border-[1px] outline-none dark:focus:border-blue-500 focus:border-blue-500"
         ref={ref}
         {...rest}
       />

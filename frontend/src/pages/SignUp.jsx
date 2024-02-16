@@ -1,5 +1,4 @@
 import { Link, useNavigate } from "react-router-dom";
-import Button from "../components/Button";
 import CustomForm from "../components/CustomForm";
 import Backdrop from "../components/Backdrop";
 import SmallText from "../components/SmallText";
@@ -10,6 +9,8 @@ import { useForm } from "react-hook-form";
 import axios from "axios";
 import SpinnerText from "../components/SpinnerText";
 import toast from "react-hot-toast";
+import BgButton from "../components/BgButton";
+import { useEffect } from "react";
 
 function SignUp() {
   const {
@@ -31,6 +32,12 @@ function SignUp() {
       localStorage.removeItem("loggedin");
     }
   }
+
+  useEffect(() => {
+    if (localStorage.getItem("loggedin")) {
+      navigate("/");
+    }
+  }, []);
 
   return (
     <Backdrop>
@@ -158,10 +165,10 @@ function SignUp() {
               ]}
             />
           </div>
-          <Button type="submit">
+          <BgButton type="submit">
             <SpinnerText loading={isSubmitting}>Sign Up</SpinnerText>
-          </Button>
-          <div className="flex justify-center gap-1">
+          </BgButton>
+          <div className="dark:text-neutral-300 flex justify-center gap-1">
             Already have an account ?
             <Link
               to={isSubmitting ? "#" : "/login"}

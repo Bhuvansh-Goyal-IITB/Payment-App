@@ -1,24 +1,14 @@
-import Button from "./Button";
+import SimpleButton from "./SimpleButton";
+import UserInfo from "./UserInfo";
 
 function UserListItem({ stale, firstName, lastName, email }) {
   return (
     <div
-      className={`flex ${stale ? "opacity-50" : ""} bg-white items-center justify-between shadow-md`}
+      className={`flex ${stale ? "opacity-60" : ""} p-2 item-bg items-center justify-between`}
     >
-      <div className="flex items-center gap-4 p-2">
-        <div className="flex w-10 h-10 items-center justify-center bg-gradient-dark text-white rounded-full p-2">
-          {firstName[0].toUpperCase()}
-          {lastName[0].toUpperCase()}
-        </div>
-        <div className="flex flex-col">
-          <div className="text-lg">
-            {firstName} {lastName}
-          </div>
-          <div className="text-center text-sm text-neutral-300">{email}</div>
-        </div>
-      </div>
+      <UserInfo firstName={firstName} lastName={lastName} email={email} />
       <div className="p-2">
-        <Button>Send Money</Button>
+        <SimpleButton>Send Money</SimpleButton>
       </div>
     </div>
   );

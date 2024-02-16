@@ -1,5 +1,4 @@
 import { Link, useNavigate } from "react-router-dom";
-import Button from "../components/Button";
 import LargeText from "../components/LargeText";
 import SmallText from "../components/SmallText";
 import CustomForm from "../components/CustomForm";
@@ -10,6 +9,8 @@ import FormError from "../components/FormError";
 import axios from "axios";
 import toast from "react-hot-toast";
 import SpinnerText from "../components/SpinnerText";
+import BgButton from "../components/BgButton";
+import { useEffect } from "react";
 
 function Login() {
   const {
@@ -27,15 +28,21 @@ function Login() {
       toast.success("Logged in successfully!");
       navigate("/");
     } catch (error) {
-      toast.error(error.response.data.message);
+      toast.error(error.response?.data.message ?? "Server Error!");
       localStorage.removeItem("loggedin");
     }
   }
 
+  useEffect(() => {
+    if (localStorage.getItem("loggedin")) {
+      navigate("/");
+    }
+  }, []);
+
   return (
     <Backdrop>
       <CustomForm onSubmit={handleSubmit(onSubmit)} noValidate={true}>
-        <div className="flex flex-col justify-center gap-3">
+        <div className="light flex flex-col justify-center gap-3">
           <LargeText>Login</LargeText>
           <SmallText>Enter your credentials to access your account</SmallText>
           <div className="flex flex-col gap-1">
@@ -80,10 +87,10 @@ function Login() {
               ]}
             />
           </div>
-          <Button type="submit" disabled={isSubmitting}>
+          <BgButton type="submit" disabled={isSubmitting}>
             <SpinnerText loading={isSubmitting}>Login</SpinnerText>
-          </Button>
-          <div className="flex justify-center gap-1">
+          </BgButton>
+          <div className="flex dark:text-neutral-300 justify-center gap-1">
             Dont have an account ?
             <Link
               to={isSubmitting ? "#" : "/signup"}

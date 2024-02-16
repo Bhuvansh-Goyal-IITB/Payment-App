@@ -4,7 +4,7 @@ import { Account, User, connectToDB } from "../db/db.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { authMiddleware } from "../middlewares.js";
-import { COOKIE_EXPIRY_SECONDS } from "../config.js";
+import { COOKIE_EXPIRY_SECONDS, JWT_EXPIRY_TIME } from "../config.js";
 
 const userRouter = Router();
 
@@ -12,21 +12,40 @@ userRouter.get("/profile", authMiddleware, async (req, res) => {
   try {
     await connectToDB();
 
-    const user = await User.findOne(
+    const user = await User.aggregate([
       {
-        _id: req.userId,
+        $match: {
+          _id: new mongoose.Types.ObjectId(req.userId),
+        },
       },
-      ["email", "firstName", "lastName"],
-    );
+      {
+        $lookup: {
+          from: "accounts",
+          localField: "_id",
+          foreignField: "user",
+          as: "account",
+        },
+      },
+      {
+        $project: {
+          email: 1,
+          firstName: 1,
+          lastName: 1,
+          balance: {
+            $arrayElemAt: ["$account.balance", 0],
+          },
+        },
+      },
+    ]);
 
-    if (!user) {
+    if (!user[0]) {
       return res.status(404).json({
         message: "User not found.",
       });
     }
 
     return res.json({
-      user,
+      user: user[0],
     });
   } catch (error) {
     return res.status(500).json({
@@ -35,27 +54,50 @@ userRouter.get("/profile", authMiddleware, async (req, res) => {
   }
 });
 
-userRouter.get("/logout", async (_req, res) => {
+userRouter.get("/logout", authMiddleware, async (_req, res) => {
   return res.clearCookie("jwt").json({
     message: "User logged out",
   });
 });
 
-userRouter.get("/bulk", async (req, res) => {
+userRouter.get("/bulk", authMiddleware, async (req, res) => {
   try {
     await connectToDB();
 
     const query = req.query.filter || "";
 
-    const users = await User.find(
+    const users = await User.aggregate([
       {
-        $or: [
-          { firstName: { $regex: query, $options: "i" } },
-          { lastName: { $regex: query, $options: "i" } },
-        ],
+        $project: {
+          email: 1,
+          firstName: 1,
+          lastName: 1,
+          fullName: {
+            $concat: ["$firstName", " ", "$lastName"],
+          },
+        },
       },
-      ["email", "firstName", "lastName", "_id"],
-    );
+      {
+        $match: {
+          fullName: {
+            $regex: query,
+            $options: "i",
+          },
+        },
+      },
+      {
+        $match: {
+          _id: {
+            $ne: new mongoose.Types.ObjectId(req.userId),
+          },
+        },
+      },
+      {
+        $project: {
+          fullName: 0,
+        },
+      },
+    ]);
 
     return res.json({
       users,
@@ -167,7 +209,9 @@ userRouter.post("/signup", async (req, res) => {
     await session.commitTransaction();
     await session.endSession();
 
-    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET);
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
+      expiresIn: JWT_EXPIRY_TIME,
+    });
 
     res.cookie("jwt", token, {
       httpOnly: true,
@@ -227,8 +271,9 @@ userRouter.post("/login", async (req, res) => {
       });
     }
 
-    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET);
-
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
+      expiresIn: JWT_EXPIRY_TIME,
+    });
     res.cookie("jwt", token, {
       httpOnly: true,
       maxAge: COOKIE_EXPIRY_SECONDS * 1000,

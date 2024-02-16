@@ -22,7 +22,10 @@ const TransactionSchema = new mongoose.Schema({
 
 const AccountSchema = new mongoose.Schema({
   user: { type: mongoose.SchemaTypes.ObjectId, ref: "User", required: true },
-  balance: { type: Number, default: () => 1 + Math.random() * 9999 },
+  balance: {
+    type: Number,
+    default: () => (1 + Math.random() * 9999).toFixed(2),
+  },
   transactions: [{ type: mongoose.SchemaTypes.ObjectId, ref: "Transaction" }],
 });
 

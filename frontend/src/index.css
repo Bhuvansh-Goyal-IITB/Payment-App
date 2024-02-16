@@ -22,12 +22,32 @@ body {
     scrollbar-width: none; /* Firefox */
   }
 
-  .bg-gradient-dark {
-    @apply bg-gradient-to-br from-neutral-800 to-zinc-900;
+  .bg {
+    @apply dark:bg-[#444] bg-[#CCC];
   }
 
-  .bg-gradient-medium {
-    @apply bg-gradient-to-br from-stone-700 to-stone-800;
+  .item-bg {
+    @apply dark:bg-[#222] bg-white;
+  }
+
+  .item-bg-inverse {
+    @apply bg-[#222] dark:bg-white;
+  }
+
+  .text-hoverable {
+    @apply dark:text-neutral-100 dark:hover:text-white text-neutral-900 hover:text-black;
+  }
+
+  .text-hoverable-inverse {
+    @apply text-neutral-100 hover:text-white dark:text-neutral-900 dark:hover:text-black;
+  }
+
+  .text {
+    @apply dark:text-neutral-50 text-neutral-950;
+  }
+
+  .text-inverse {
+    @apply text-neutral-50 dark:text-neutral-950;
   }
 
   .text-gradient-neutral-100 {

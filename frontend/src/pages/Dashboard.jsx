@@ -5,41 +5,68 @@ import axios from "axios";
 import UserCard from "../components/UserCard";
 import { useDebounceValue } from "../hooks/useDebounceValue";
 import LogoCard from "../components/LogoCard";
+import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
+import Navbar from "../components/Navbar";
+import TransactionList from "../components/TransactionList";
 
 function Dashboard() {
   let [query, setQuery] = useState("");
-  let [balance, setBalance] = useState("");
   let [userProfile, setUserProfile] = useState({});
   let debounceQuery = useDebounceValue(query, 400);
 
-  useEffect(() => {
-    axios.get("/api/v1/account/balance").then(({ data: { balance } }) => {
-      setBalance(balance.toFixed(2).toString());
-    });
+  let [selectedTab, setSelectedTab] = useState("home");
 
-    axios.get("/api/v1/user/profile").then(({ data: { user } }) => {
-      setUserProfile(user);
-    });
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const controller = new AbortController();
+    const signal = controller.signal;
+
+    axios
+      .get("/api/v1/user/profile", { signal })
+      .then(({ data: { user } }) => {
+        setUserProfile(user);
+      })
+      .catch((error) => {
+        if (error.code == "ERR_CANCELED") {
+          return;
+        }
+        if (error.response.status == 403) {
+          toast("Session timed out!", {
+            icon: "🍪",
+          });
+          localStorage.removeItem("loggedin");
+          return navigate("/login");
+        }
+        toast.error(error.response?.data.message ?? "Server Error!");
+      });
+
+    return () => {
+      controller.abort();
+    };
   }, []);
 
   return (
-    <div className="h-full">
-      <div className="flex flex-col gap-2 h-full p-2 bg-gradient-medium">
-        <div className="flex w-full gap-2">
-          <LogoCard />
-          <UserCard balance={balance} {...userProfile} />
-        </div>
-        <div className="hidden sm:flex flex-col overflow-clip rounded-md">
+    <div className="flex h-full">
+      <div className="flex basis-1/5 flex-col gap-2 p-2 item-bg">
+        <LogoCard />
+        <Navbar selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
+      </div>
+      <div className="flex grow flex-col gap-4 p-4 bg">
+        <UserCard {...userProfile} />
+        <div className="flex flex-col gap-1">
           <SearchBar
             placeholder="Search users"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
           />
-          <UserList
-            userEmail={userProfile.email}
-            query={debounceQuery}
-            deferredQuery={query}
-          />
+          {selectedTab == "home" && (
+            <UserList query={debounceQuery} debouncedQuery={query} />
+          )}
+          {selectedTab == "transactions" && (
+            <TransactionList query={query} debouncedQuery={debounceQuery} />
+          )}
         </div>
       </div>
     </div>

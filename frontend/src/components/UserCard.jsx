@@ -1,51 +1,28 @@
-import axios from "axios";
 import { memo } from "react";
-import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
 
 const UserCard = memo(({ balance, firstName, lastName, email }) => {
-  const navigate = useNavigate();
+  console.log("hello");
   return (
-    <div className="hidden sm:flex flex-col justify-center md:justify-evenly gap-4 w-full bg-white pl-6 xl:pl-8 p-5 rounded-md shadow-md">
+    <div className="flex item-bg text flex-col justify-center md:justify-evenly gap-4 w-full p-8 rounded-md shadow-md">
       <div className="flex flex-col font-serif text-center sm:text-left ">
-        <div className="flex justify-between pr-4">
-          <div>
-            <div className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl">
-              {firstName} {lastName}
-            </div>
-            <div className="text-center sm:text-left text-sm md:text-md lg:text-lg xl:text-xl text-neutral-400">
-              {email}
-            </div>
+        <div>
+          <div className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl">
+            {firstName} {lastName}
           </div>
-          <div className="text-sm md:text-md lg:text-lg xl:text-xl text-stone-700">
-            <div
-              onClick={() => {
-                axios
-                  .get("/api/v1/user/logout")
-                  .then(() => {
-                    toast.success("Logged out successfully!");
-                    navigate("/login");
-                  })
-                  .catch(() => {
-                    toast.error("Server Error!");
-                  });
-              }}
-              className="hover:cursor-pointer hover:text-black hover:underline"
-            >
-              Logout
-            </div>
+          <div className="text-center sm:text-left text-sm md:text-md lg:text-lg xl:text-xl text-neutral-400">
+            {email}
           </div>
         </div>
       </div>
       <div className="flex items-center sm:justify-start justify-center gap-2">
         {balance == "" ? (
-          <div className="h-4 w-4 rounded-full animate-spin border-[2px] border-t-transparent border-black" />
+          <div className="h-4 w-4 rounded-full animate-spin border-[2px] border-t-transparent border-black dark:border-white" />
         ) : (
-          <div className="flex items-center gap-2 text-3xl md:text-4xl lg:text-5xl xl:text-6xl text-gradient-neutral-600">
+          <div className="flex font-bold items-center gap-2 text-2xl md:text-3xl lg:text-4xl xl:text-5xl text">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
-              className="w-6 h-6 md:w-8 md:h-8 lg:w-12 lg:h-12 xl:w-16 xl:h-16"
+              className="w-4 h-4 md:w-6 md:h-6 lg:w-8 lg:h-8 xl:w-12 xl:h-12"
             >
               <defs>
                 <linearGradient

@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import UserListItem from "./UserListItem";
+import TransactionItem from "./TransactionItem";
 import axios from "axios";
 
-function UserList({ debouncedQuery, query }) {
+function TransactionList({ query, debouncedQuery }) {
+  let [transactions, setTransactions] = useState([]);
   let [loading, setLoading] = useState(true);
-  let [users, setUsers] = useState([]);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -13,9 +13,9 @@ function UserList({ debouncedQuery, query }) {
     setLoading(true);
 
     axios
-      .get(`/api/v1/user/bulk?filter=${query}`, { signal })
-      .then(({ data: { users } }) => {
-        setUsers(users);
+      .get(`/api/v1/account/bulk/transaction?filter=${query}`, { signal })
+      .then(({ data: { transactions } }) => {
+        setTransactions(transactions);
         setLoading(false);
       })
       .catch((_) => {});
@@ -27,17 +27,18 @@ function UserList({ debouncedQuery, query }) {
 
   return (
     <div className="scroll-m-0 rounded-md shadow-md divide-neutral-200 dark:divide-neutral-700 divide-y flex flex-col scrollbar-hide overflow-y-scroll">
-      {users.map(({ email, firstName, lastName, _id }) => (
-        <UserListItem
+      {transactions.map(({ amount, timestamp, user, received, _id }) => (
+        <TransactionItem
           key={_id}
           stale={query != debouncedQuery ? true : loading}
-          firstName={firstName}
-          lastName={lastName}
-          email={email}
+          user={user}
+          received={received}
+          amount={amount}
+          timestamp={timestamp}
         />
       ))}
     </div>
   );
 }
 
-export default UserList;
+export default TransactionList;

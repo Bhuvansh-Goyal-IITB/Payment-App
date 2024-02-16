@@ -33,39 +33,96 @@ accountRouter.get("/transaction/:id", authMiddleware, async (req, res) => {
   try {
     await connectToDB();
 
-    const account = await Account.findOne({
-      user: req.userId,
-    }).populate({
-      path: "transactions",
-      match: { _id: new mongoose.Types.ObjectId(req.params.id) },
-      populate: [
-        {
-          path: "from",
-          model: "User",
-          select: ["email", "firstName", "lastName"],
+    const transaction = await Account.aggregate([
+      {
+        $match: {
+          user: new mongoose.Types.ObjectId(req.userId),
         },
-        {
-          path: "to",
-          model: "User",
-          select: ["email", "firstName", "lastName"],
+      },
+      {
+        $lookup: {
+          from: "transactions",
+          localField: "transactions",
+          foreignField: "_id",
+          as: "transactions",
         },
-      ],
-      model: "Transaction",
-    });
+      },
+      {
+        $unwind: "$transactions",
+      },
+      {
+        $project: {
+          _id: 0,
+          transactions: 1,
+        },
+      },
+      {
+        $replaceRoot: {
+          newRoot: {
+            $mergeObjects: ["$transactions", "$$ROOT"],
+          },
+        },
+      },
+      {
+        $project: {
+          transactions: 0,
+        },
+      },
+      {
+        $match: {
+          _id: new mongoose.Types.ObjectId(req.params.id),
+        },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "from",
+          foreignField: "_id",
+          as: "from",
+        },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "to",
+          foreignField: "_id",
+          as: "to",
+        },
+      },
+      {
+        $project: {
+          _id: 1,
+          from: {
+            $arrayElemAt: ["$from", 0],
+          },
+          to: {
+            $arrayElemAt: ["$to", 0],
+          },
+          amount: 1,
+          timestamp: 1,
+        },
+      },
+      {
+        $project: {
+          from: { password: 0 },
+          to: { password: 0 },
+        },
+      },
+    ]);
 
-    if (!account.transactions[0]) {
+    if (!transaction.length) {
       return res.status(404).json({
-        message: "Transaction not found",
+        message: "Transaction not found.",
       });
     }
 
     return res.json({
-      transaction: account.transactions[0],
+      transaction: transaction[0],
     });
   } catch (error) {
     if (error.toString().startsWith("BSONError")) {
       return res.status(404).json({
-        message: "Transaction not found",
+        message: "Invalid transaction ID.",
       });
     }
 
@@ -75,42 +132,138 @@ accountRouter.get("/transaction/:id", authMiddleware, async (req, res) => {
   }
 });
 
-accountRouter.get("/transaction/bulk", authMiddleware, async (req, res) => {
+accountRouter.get("/bulk/transaction", authMiddleware, async (req, res) => {
   try {
     await connectToDB();
 
-    const account = await Account.findOne(
-      {
-        user: req.userId,
-      },
-      ["from", "to", "amount", "timestamp"],
-    ).populate({
-      path: "transactions",
-      populate: [
-        {
-          path: "from",
-          model: "User",
-          select: ["email", "firstName", "lastName"],
-        },
-        {
-          path: "to",
-          model: "User",
-          select: ["email", "firstName", "lastName"],
-        },
-      ],
-      model: "Transaction",
-    });
+    const query = req.query.filter || "";
 
-    if (!account) {
-      return res.status(404).json({
-        message: "User not found",
-      });
-    }
+    const transactions = await Account.aggregate([
+      {
+        $match: {
+          user: new mongoose.Types.ObjectId(req.userId),
+        },
+      },
+      {
+        $lookup: {
+          from: "transactions",
+          localField: "transactions",
+          foreignField: "_id",
+          as: "transactions",
+        },
+      },
+      {
+        $unwind: "$transactions",
+      },
+      {
+        $project: {
+          _id: 0,
+          transactions: 1,
+        },
+      },
+      {
+        $replaceRoot: {
+          newRoot: {
+            $mergeObjects: ["$transactions", "$$ROOT"],
+          },
+        },
+      },
+      {
+        $project: {
+          transactions: 0,
+        },
+      },
+      {
+        $project: {
+          user: {
+            $cond: {
+              if: {
+                $eq: ["$from", new mongoose.Types.ObjectId(req.userId)],
+              },
+              then: "$to",
+              else: "$from",
+            },
+          },
+          received: {
+            $cond: {
+              if: {
+                $eq: ["$from", new mongoose.Types.ObjectId(req.userId)],
+              },
+              then: false,
+              else: true,
+            },
+          },
+          amount: 1,
+          timestamp: 1,
+        },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "user",
+          foreignField: "_id",
+          as: "user",
+        },
+      },
+      {
+        $project: {
+          user: {
+            $mergeObjects: [
+              {
+                $arrayElemAt: ["$user", 0],
+              },
+              {
+                fullName: {
+                  $concat: [
+                    {
+                      $arrayElemAt: ["$user.firstName", 0],
+                    },
+                    " ",
+                    {
+                      $arrayElemAt: ["$user.lastName", 0],
+                    },
+                  ],
+                },
+              },
+            ],
+          },
+          amount: 1,
+          timestamp: 1,
+          received: 1,
+        },
+      },
+      {
+        $match: {
+          "user.fullName": {
+            $regex: query,
+            $options: "i",
+          },
+        },
+      },
+      {
+        $project: {
+          user: {
+            fullName: 0,
+            password: 0,
+          },
+        },
+      },
+      {
+        $sort: {
+          timestamp: -1,
+        },
+      },
+    ]);
 
     return res.json({
-      transactions: account.transactions,
+      transactions,
     });
   } catch (error) {
+    if (error.toString().startsWith("BSONError")) {
+      return res.status(404).json({
+        message: "Invalid user ID.",
+      });
+    }
     return res.status(500).json({
       message: "Internal Server Error.",
     });
@@ -122,6 +275,12 @@ accountRouter.post("/transfer", authMiddleware, async (req, res) => {
     await connectToDB();
 
     const { to, amount } = req.body;
+
+    if ((amount * 100) % 1 != 0) {
+      return res.status(400).json({
+        message: "Amount can only be upto 2 decimal places.",
+      });
+    }
 
     const toAccount = await Account.findOne({
       user: to,
@@ -177,7 +336,6 @@ accountRouter.post("/transfer", authMiddleware, async (req, res) => {
       message: "Transfer successful.",
     });
   } catch (error) {
-    console.log(error);
     return res.status(500).json({
       message: "Internal Server Error.",
     });
