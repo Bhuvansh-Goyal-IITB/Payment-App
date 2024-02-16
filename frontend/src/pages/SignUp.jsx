@@ -11,6 +11,7 @@ import SpinnerText from "../components/SpinnerText";
 import toast from "react-hot-toast";
 import BgButton from "../components/BgButton";
 import { useEffect } from "react";
+import FormErrorItem from "../components/FormErrorItem";
 
 function SignUp() {
   const {
@@ -66,6 +67,7 @@ function SignUp() {
                   message: "Please enter a valid email.",
                 },
               ]}
+              errorComponent={FormErrorItem}
             />
           </div>
           <div className="flex flex-col gap-1">
@@ -97,6 +99,7 @@ function SignUp() {
                     "Please choose a stronger password. Try a mix of letter, numbers, and symbols.",
                 },
               ]}
+              errorComponent={FormErrorItem}
             />
           </div>
           <div className="flex flex-col gap-1">
@@ -130,6 +133,7 @@ function SignUp() {
                   message: "First name can only contain alphabets.",
                 },
               ]}
+              errorComponent={FormErrorItem}
             />
           </div>
           <div className="flex flex-col gap-1">
@@ -163,6 +167,7 @@ function SignUp() {
                   message: "Last name can only contain alphabets.",
                 },
               ]}
+              errorComponent={FormErrorItem}
             />
           </div>
           <BgButton type="submit">

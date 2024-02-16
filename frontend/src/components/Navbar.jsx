@@ -39,13 +39,13 @@ export function Navbar({ selectedTab, setSelectedTab }) {
   }
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col grow gap-2">
       <TabButton
         selected={selectedTab == "home"}
         onClick={handleTabSelect("home")}
       >
         <div className="flex gap-2 justify-center items-center text-lg">
-          <HomeIcon className="w-6 inline -translate-y-[2px]" />
+          <HomeIcon className="w-5 inline -translate-y-[2px]" />
           Home
         </div>
       </TabButton>
@@ -54,7 +54,7 @@ export function Navbar({ selectedTab, setSelectedTab }) {
         onClick={handleTabSelect("transactions")}
       >
         <div className="flex gap-2 justify-center items-center text-lg">
-          <CreditCardIcon className="w-6 inline" />
+          <CreditCardIcon className="w-5 inline" />
           Transactions
         </div>
       </TabButton>
@@ -63,13 +63,13 @@ export function Navbar({ selectedTab, setSelectedTab }) {
         onClick={handleTabSelect("profile")}
       >
         <div className="flex gap-2 justify-center items-center text-lg">
-          <UserCircleIcon className="w-6 inline" />
+          <UserCircleIcon className="w-5 inline" />
           Profile
         </div>
       </TabButton>
       <SimpleButton onClick={handleLogout}>
         <div className="flex gap-2 justify-center items-center text-lg">
-          <ArrowLeftStartOnRectangleIcon className="w-6 inline" />
+          <ArrowLeftStartOnRectangleIcon className="w-5 inline" />
           Logout
         </div>
       </SimpleButton>

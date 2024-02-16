@@ -49,18 +49,22 @@ function Dashboard() {
 
   return (
     <div className="flex h-full">
-      <div className="flex basis-1/5 flex-col gap-2 p-2 item-bg">
+      <div className="flex basis-1/5 flex-col items-center gap-2 p-2 item-bg">
         <LogoCard />
-        <Navbar selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
+        <div className="flex justify-center w-2/3">
+          <Navbar selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
+        </div>
       </div>
       <div className="flex grow flex-col gap-4 p-4 bg">
         <UserCard {...userProfile} />
         <div className="flex flex-col gap-1">
-          <SearchBar
-            placeholder="Search users"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-          />
+          {selectedTab != "profile" && (
+            <SearchBar
+              placeholder="Search users"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+            />
+          )}
           {selectedTab == "home" && (
             <UserList query={debounceQuery} debouncedQuery={query} />
           )}

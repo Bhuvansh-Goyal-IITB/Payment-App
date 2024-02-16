@@ -1,7 +1,6 @@
 import { useEffect, useRef } from "react";
-import FormErrorItem from "./FormErrorItem";
 
-function FormError({ elementList }) {
+function FormError({ elementList, errorComponent: ErrorComponent }) {
   const containerRef = useRef(null);
 
   useEffect(() => {
@@ -21,7 +20,7 @@ function FormError({ elementList }) {
   return (
     <div ref={containerRef} className="relative overflow-clip">
       {elementList.map(({ condition, message }, index) => (
-        <FormErrorItem
+        <ErrorComponent
           key={index}
           showCondition={condition}
           errorMessage={message}

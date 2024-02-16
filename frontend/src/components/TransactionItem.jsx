@@ -2,7 +2,6 @@ import { formatDate } from "../utils/formatDate";
 import UserInfo from "./UserInfo";
 
 function TransactionItem({
-  _id,
   user: { email, firstName, lastName },
   received,
   timestamp,

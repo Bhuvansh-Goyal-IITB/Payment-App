@@ -1,7 +1,6 @@
 import { memo } from "react";
 
 const UserCard = memo(({ balance, firstName, lastName, email }) => {
-  console.log("hello");
   return (
     <div className="flex item-bg text flex-col justify-center md:justify-evenly gap-4 w-full p-8 rounded-md shadow-md">
       <div className="flex flex-col font-serif text-center sm:text-left ">

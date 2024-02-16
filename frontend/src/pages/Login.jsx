@@ -10,6 +10,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import SpinnerText from "../components/SpinnerText";
 import BgButton from "../components/BgButton";
+import FormErrorItem from "../components/FormErrorItem";
 import { useEffect } from "react";
 
 function Login() {
@@ -66,6 +67,7 @@ function Login() {
                   message: "Please enter a valid email.",
                 },
               ]}
+              errorComponent={FormErrorItem}
             />
           </div>
           <div className="flex flex-col gap-1">
@@ -85,6 +87,7 @@ function Login() {
                   message: "Password is required.",
                 },
               ]}
+              errorComponent={FormErrorItem}
             />
           </div>
           <BgButton type="submit" disabled={isSubmitting}>
