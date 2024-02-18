@@ -36,6 +36,7 @@ function Login() {
 
   useEffect(() => {
     if (localStorage.getItem("loggedin")) {
+      toast("You are already logged in!");
       navigate("/");
     }
   }, []);
