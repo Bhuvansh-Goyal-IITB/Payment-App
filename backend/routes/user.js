@@ -8,6 +8,33 @@ import { COOKIE_EXPIRY_SECONDS, JWT_EXPIRY_TIME } from "../config.js";
 
 const userRouter = Router();
 
+userRouter.get("/profile/:id", authMiddleware, async (req, res) => {
+  try {
+    await connectToDB();
+
+    const user = await User.findOne(
+      {
+        _id: req.params.id,
+      },
+      ["email", "firstName", "lastName"],
+    );
+
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found",
+      });
+    }
+
+    return res.json({
+      user,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: "Internal Server Error.",
+    });
+  }
+});
+
 userRouter.get("/profile", authMiddleware, async (req, res) => {
   try {
     await connectToDB();
@@ -223,6 +250,7 @@ userRouter.post("/signup", async (req, res) => {
       token,
     });
   } catch (error) {
+    console.log(error);
     if (error.errors) {
       return res.status(400).json({
         message: error.message.split(":")[2].trim(),
@@ -283,6 +311,7 @@ userRouter.post("/login", async (req, res) => {
       token,
     });
   } catch (error) {
+    console.log(error);
     return res.status(500).json({
       message: "Internal Server Error.",
     });

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import UserListItem from "./UserListItem";
 import axios from "axios";
 
-function UserList({ debouncedQuery, query }) {
+function UserList({ defaultUsers, debouncedQuery, query }) {
   let [loading, setLoading] = useState(true);
   let [users, setUsers] = useState([]);
 
@@ -12,13 +12,18 @@ function UserList({ debouncedQuery, query }) {
 
     setLoading(true);
 
-    axios
-      .get(`/api/v1/user/bulk?filter=${query}`, { signal })
-      .then(({ data: { users } }) => {
-        setUsers(users);
-        setLoading(false);
-      })
-      .catch((_) => {});
+    if (query == null) {
+      setUsers(defaultUsers);
+      setLoading(false);
+    } else {
+      axios
+        .get(`/api/v1/user/bulk?filter=${query}`, { signal })
+        .then(({ data: { users } }) => {
+          setUsers(users);
+          setLoading(false);
+        })
+        .catch((_) => {});
+    }
 
     return () => {
       controller.abort();
@@ -26,11 +31,14 @@ function UserList({ debouncedQuery, query }) {
   }, [query]);
 
   return (
-    <div className="scroll-m-0 rounded-md shadow-md divide-neutral-200 dark:divide-neutral-700 divide-y flex flex-col scrollbar-hide overflow-y-scroll">
+    <div className="divide-neutral-200 dark:divide-neutral-700 divide-y flex flex-col">
       {users.map(({ email, firstName, lastName, _id }) => (
         <UserListItem
           key={_id}
-          stale={query != debouncedQuery ? true : loading}
+          id={_id}
+          stale={
+            query == null ? false : query != debouncedQuery ? true : loading
+          }
           firstName={firstName}
           lastName={lastName}
           email={email}

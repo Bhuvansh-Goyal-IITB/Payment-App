@@ -10,7 +10,7 @@ import {
 dotenv.config();
 
 async function connectToDB() {
-  return await mongoose.connect(process.env.MONGO_URI);
+  await mongoose.connect(process.env.MONGO_URI);
 }
 
 const TransactionSchema = new mongoose.Schema({

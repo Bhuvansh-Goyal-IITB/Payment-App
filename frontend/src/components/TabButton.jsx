@@ -1,11 +1,20 @@
-function TabButton({ children, selected, onClick }) {
+import { NavLink } from "react-router-dom";
+
+function TabButton({ children, to }) {
   return (
-    <div
-      className={`rounded-md p-2 hover:cursor-pointer font-medium ${selected ? "dark:text-neutral-950 text-neutral-50 bg-neutral-950 dark:bg-neutral-50" : "text-neutral-950 dark:text-neutral-50 hover:text-white dark:hover:text-black hover:bg-neutral-950 dark:hover:bg-neutral-50"}  transition-colors disabled:opacity-70 disabled:cursor-not-allowed`}
-      onClick={onClick}
+    <NavLink
+      to={to}
+      className={({ isActive, isPending }) =>
+        (isActive
+          ? "dark:text-neutral-950 text-neutral-50 bg-neutral-950 dark:bg-neutral-50"
+          : isPending
+            ? "opacity:70"
+            : "text-neutral-950 dark:text-neutral-50 hover:text-white dark:hover:text-black hover:bg-neutral-950 dark:hover:bg-neutral-50") +
+        " rounded-md p-2 hover:cursor-pointer font-medium transition-colors"
+      }
     >
-      <div>{children}</div>
-    </div>
+      {children}
+    </NavLink>
   );
 }
 

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import TransactionItem from "./TransactionItem";
 import axios from "axios";
 
-function TransactionList({ query, debouncedQuery }) {
+function TransactionList({ defaultTransactions, query, debouncedQuery }) {
   let [transactions, setTransactions] = useState([]);
   let [loading, setLoading] = useState(true);
 
@@ -12,13 +12,18 @@ function TransactionList({ query, debouncedQuery }) {
 
     setLoading(true);
 
-    axios
-      .get(`/api/v1/account/bulk/transaction?filter=${query}`, { signal })
-      .then(({ data: { transactions } }) => {
-        setTransactions(transactions);
-        setLoading(false);
-      })
-      .catch((_) => {});
+    if (query == null) {
+      setTransactions(defaultTransactions);
+      setLoading(false);
+    } else {
+      axios
+        .get(`/api/v1/account/bulk/transaction?filter=${query}`, { signal })
+        .then(({ data: { transactions } }) => {
+          setTransactions(transactions);
+          setLoading(false);
+        })
+        .catch((_) => {});
+    }
 
     return () => {
       controller.abort();
@@ -30,7 +35,9 @@ function TransactionList({ query, debouncedQuery }) {
       {transactions.map(({ amount, timestamp, user, received, _id }) => (
         <TransactionItem
           key={_id}
-          stale={query != debouncedQuery ? true : loading}
+          stale={
+            query == null ? false : query != debouncedQuery ? true : loading
+          }
           user={user}
           received={received}
           amount={amount}

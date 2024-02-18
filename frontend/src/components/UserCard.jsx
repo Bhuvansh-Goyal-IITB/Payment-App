@@ -42,7 +42,7 @@ const UserCard = memo(({ balance, firstName, lastName, email }) => {
                 clipRule="evenodd"
               />
             </svg>
-            {balance}
+            {parseFloat(balance).toFixed(2)}
           </div>
         )}
       </div>

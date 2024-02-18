@@ -4,21 +4,14 @@ import {
   ArrowLeftStartOnRectangleIcon,
   CreditCardIcon,
 } from "@heroicons/react/24/solid";
-import TabButton from "./TabButton";
 import SimpleButton from "./SimpleButton";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import TabButton from "./TabButton";
 
-export function Navbar({ selectedTab, setSelectedTab }) {
+export function Navbar() {
   const navigate = useNavigate();
-
-  function handleTabSelect(callerTab) {
-    return function () {
-      if (selectedTab == callerTab) return;
-      setSelectedTab(callerTab);
-    };
-  }
 
   function handleLogout() {
     axios
@@ -26,7 +19,7 @@ export function Navbar({ selectedTab, setSelectedTab }) {
       .then(() => {
         toast.success("Logged out successfully!");
         localStorage.removeItem("loggedin");
-        navigate("/login");
+        return navigate("/login");
       })
       .catch((error) => {
         if (error.response.status == 403) {
@@ -39,40 +32,35 @@ export function Navbar({ selectedTab, setSelectedTab }) {
   }
 
   return (
-    <div className="flex flex-col grow gap-2">
-      <TabButton
-        selected={selectedTab == "home"}
-        onClick={handleTabSelect("home")}
-      >
-        <div className="flex gap-2 justify-center items-center text-lg">
-          <HomeIcon className="w-5 inline -translate-y-[2px]" />
-          Home
-        </div>
-      </TabButton>
-      <TabButton
-        selected={selectedTab == "transactions"}
-        onClick={handleTabSelect("transactions")}
-      >
-        <div className="flex gap-2 justify-center items-center text-lg">
-          <CreditCardIcon className="w-5 inline" />
-          Transactions
-        </div>
-      </TabButton>
-      <TabButton
-        selected={selectedTab == "profile"}
-        onClick={handleTabSelect("profile")}
-      >
-        <div className="flex gap-2 justify-center items-center text-lg">
-          <UserCircleIcon className="w-5 inline" />
-          Profile
-        </div>
-      </TabButton>
-      <SimpleButton onClick={handleLogout}>
-        <div className="flex gap-2 justify-center items-center text-lg">
-          <ArrowLeftStartOnRectangleIcon className="w-5 inline" />
-          Logout
-        </div>
-      </SimpleButton>
+    <div className="flex flex-col grow gap-10 text-sm md:text-base">
+      <div className="flex flex-col gap-2">
+        <TabButton to="/">
+          <div className="flex gap-2 justify-center items-center">
+            <HomeIcon className="w-5 inline -translate-y-[2px]" />
+            Home
+          </div>
+        </TabButton>
+        <TabButton to="/transactions">
+          <div className="flex gap-2 justify-center items-center">
+            <CreditCardIcon className="w-5 inline" />
+            Transactions
+          </div>
+        </TabButton>
+      </div>
+      <div className="flex flex-col gap-2">
+        <SimpleButton onClick={() => navigate("/edit")}>
+          <div className="flex gap-2 justify-center items-center">
+            <UserCircleIcon className="w-5 inline" />
+            Edit Profile
+          </div>
+        </SimpleButton>
+        <SimpleButton onClick={handleLogout}>
+          <div className="flex gap-2 justify-center items-center">
+            <ArrowLeftStartOnRectangleIcon className="w-5 inline" />
+            Logout
+          </div>
+        </SimpleButton>
+      </div>
     </div>
   );
 }

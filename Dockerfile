@@ -1,3 +1,7 @@
-FROM mongo:4.4.7
-RUN echo "rs.initiate();" > /docker-entrypoint-initdb.d/replica-init.js
-CMD [ "--replSet", "rs" ]
+FROM mongo:latest
+
+COPY ./mongosetup.sh ./usr/local/bin/mongosetup.sh
+
+RUN chmod +x ./usr/local/bin/mongosetup.sh
+
+CMD [ "mongosetup.sh" ]

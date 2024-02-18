@@ -29,7 +29,7 @@ function SignUp() {
       toast.success("Account created successfully!");
       navigate("/");
     } catch (error) {
-      toast.error(error.response.data.message);
+      toast.error(error.response?.data.message ?? "Server Error!");
       localStorage.removeItem("loggedin");
     }
   }

@@ -1,12 +1,26 @@
 services:
-  mongo:
-    image: replica-mongo
-    ports:
-      - 27017:27017
+  database:
+    build: ./
     volumes:
-      - paytm-db:/data/db
+      - payzo-data:/data/db
+
+  frontend:
+    depends_on:
+      - backend
+    build: ./frontend
+    ports:
+      - 5173:5173
+    volumes:
+      - ./frontend:/usr/src/app
+
+  backend:
+    depends_on:
+      - database
+    build: ./backend
+    ports:
+      - 3000:3000
+    volumes:
+      - ./backend:/usr/src/app
 
 volumes:
-  paytm-db:
-    external: true
-
+  payzo-data:
