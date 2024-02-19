@@ -19,13 +19,13 @@ function Transactions() {
   let debounceQuery = useDebounceValue(query, 400);
 
   return (
-    <div className="flex grow overflow-clip flex-col gap-1">
+    <div className="flex overflow-clip flex-col gap-1">
       <SearchBar
         placeholder="Search users"
         value={query ?? ""}
         onChange={(e) => setQuery(e.target.value)}
       />
-      <div className="grow-0 overflow-y-scroll rounded-md shadow-md scrollbar-hide">
+      <div className="overflow-y-scroll rounded-md shadow-md scrollbar-hide">
         <TransactionList
           defaultTransactions={transactions}
           query={query}

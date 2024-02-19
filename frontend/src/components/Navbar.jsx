@@ -32,32 +32,32 @@ export function Navbar() {
   }
 
   return (
-    <div className="flex flex-col grow gap-10 text-sm md:text-base">
-      <div className="flex flex-col gap-2">
+    <div className="flex sm:flex-col grow justify-between gap-10 text-sm md:text-base">
+      <div className="flex sm:flex-col gap-2">
         <TabButton to="/">
           <div className="flex gap-2 justify-center items-center">
-            <HomeIcon className="w-5 inline -translate-y-[2px]" />
-            Home
+            <HomeIcon className="w-4 sm:w-5 inline sm:-translate-y-[2px]" />
+            <div className="hidden sm:block">Home</div>
           </div>
         </TabButton>
         <TabButton to="/transactions">
           <div className="flex gap-2 justify-center items-center">
-            <CreditCardIcon className="w-5 inline" />
-            Transactions
+            <CreditCardIcon className="w-4 sm:w-5 inline" />
+            <div className="hidden sm:block">Transactions</div>
           </div>
         </TabButton>
       </div>
-      <div className="flex flex-col gap-2">
+      <div className="flex sm:flex-col gap-2">
         <SimpleButton onClick={() => navigate("/edit")}>
           <div className="flex gap-2 justify-center items-center">
-            <UserCircleIcon className="w-5 inline" />
-            Edit Profile
+            <UserCircleIcon className="w-4 sm:w-5 inline" />
+            <div className="hidden sm:block">Edit Profile</div>
           </div>
         </SimpleButton>
         <SimpleButton onClick={handleLogout}>
           <div className="flex gap-2 justify-center items-center">
-            <ArrowLeftStartOnRectangleIcon className="w-5 inline" />
-            Logout
+            <ArrowLeftStartOnRectangleIcon className="w-4 sm:w-5 inline" />
+            <div className="hidden sm:block">Logout</div>
           </div>
         </SimpleButton>
       </div>

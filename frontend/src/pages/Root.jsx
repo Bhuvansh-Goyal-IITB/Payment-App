@@ -16,7 +16,7 @@ function Root() {
 
   return (
     <div className="flex h-full">
-      <div className="flex basis-1/12 xl:basis-1/5 flex-col items-center gap-2 p-2 item-bg">
+      <div className="hidden sm:flex basis-1/12 xl:basis-1/5 flex-col items-center gap-2 p-2 item-bg">
         <LogoCard />
         <div className="flex justify-center w-2/3">
           <Navbar />
@@ -24,6 +24,9 @@ function Root() {
       </div>
       <div className="flex grow flex-col gap-4 p-4 bg">
         <UserCard {...userProfile} />
+        <div className="sm:hidden item-bg p-3 rounded-md shadow-md">
+          <Navbar />
+        </div>
         <Outlet />
       </div>
     </div>

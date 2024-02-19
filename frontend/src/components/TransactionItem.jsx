@@ -18,7 +18,7 @@ function TransactionItem({
         <div
           className={`${received ? "text-green-500" : "text-red-500"} flex font-bold items-center text-lg xl:text-xl p-2`}
         >
-          {received ? "+" : "-"}₹{amount}
+          {received ? "+" : "-"} ₹{parseFloat(amount).toFixed(2)}
         </div>
       </div>
 

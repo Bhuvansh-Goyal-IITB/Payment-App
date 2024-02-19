@@ -157,7 +157,7 @@ function Edit() {
               />
             </div>
             <SimpleButton type="submit" disabled={isSubmitting}>
-              Transfer
+              Edit
             </SimpleButton>
           </div>
         </div>
