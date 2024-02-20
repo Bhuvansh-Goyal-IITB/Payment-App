@@ -7,7 +7,7 @@ function SpinnerText({ loading, children }) {
             aria-hidden={!loading}
             className="transition-transform translate-x-0 aria-hidden:translate-x-4"
           >
-            <div className="h-4 w-4 rounded-full animate-spin border-[2px] border-t-transparent border-white" />
+            <div className="h-4 w-4 rounded-full animate-spin border-[2px] border-neutral-900 dark:border-neutral-100 border-t-transparent dark:border-t-transparent" />
           </div>
         </div>
         {children}

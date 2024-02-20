@@ -1,18 +1,21 @@
 import axios from "axios";
 import UserCard from "../components/UserCard";
 import LogoCard from "../components/LogoCard";
-import { Outlet, useLoaderData } from "react-router-dom";
+import { Outlet, defer, useLoaderData } from "react-router-dom";
 import Navbar from "../components/Navbar";
+import AsyncComponent from "../components/AsyncComponent";
+import UserCardLoader from "../components/UserCardLoader";
+import AuthPageError from "../components/AuthPageError";
 
 export async function loader() {
-  const {
-    data: { user },
-  } = await axios.get("/api/v1/user/profile");
-  return { user };
+  const user = axios
+    .get("/api/v1/user/profile")
+    .then(({ data: { user } }) => user);
+  return defer({ user });
 }
 
 function Root() {
-  const { user: userProfile } = useLoaderData();
+  const { user } = useLoaderData();
 
   return (
     <div className="flex h-full">
@@ -23,8 +26,14 @@ function Root() {
         </div>
       </div>
       <div className="flex grow flex-col gap-4 p-4 bg">
-        <UserCard {...userProfile} />
-        <div className="sm:hidden item-bg p-3 rounded-md shadow-md">
+        <AsyncComponent
+          fallback={<UserCardLoader />}
+          resolve={user}
+          errorElement={<AuthPageError />}
+        >
+          {(user) => <UserCard {...user} />}
+        </AsyncComponent>
+        <div className="sm:hidden item-bg p-2 rounded-md shadow-md">
           <Navbar />
         </div>
         <Outlet />

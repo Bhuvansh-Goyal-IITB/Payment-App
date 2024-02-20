@@ -247,7 +247,6 @@ userRouter.post("/signup", async (req, res) => {
 
     return res.json({
       message: "User created successfully.",
-      token,
     });
   } catch (error) {
     console.log(error);
@@ -308,7 +307,7 @@ userRouter.post("/login", async (req, res) => {
     });
 
     return res.json({
-      token,
+      message: "User logged in.",
     });
   } catch (error) {
     console.log(error);

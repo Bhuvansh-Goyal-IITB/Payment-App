@@ -22,7 +22,7 @@ function TransactionItem({
         </div>
       </div>
 
-      <div className="flex justify-center lg:hidden items-center text-neutral-400 text-sm md:text-base p-4 pt-0">
+      <div className="flex justify-center lg:hidden items-center text-neutral-400 text-xs md:text-sm p-2 pt-0">
         {formatDate(timestamp)}
       </div>
     </div>

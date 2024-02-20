@@ -212,6 +212,7 @@ accountRouter.post("/transfer", authMiddleware, async (req, res) => {
       from: req.userId,
       to,
       amount,
+      timestamp: Date.now(),
     });
 
     transaction.save({ session });
