@@ -22,6 +22,10 @@ body {
     scrollbar-width: none; /* Firefox */
   }
 
+  .animate-height {
+    transition: height 100ms ease;
+  }
+
   .bg {
     @apply dark:bg-[#444] bg-[#CCC];
   }

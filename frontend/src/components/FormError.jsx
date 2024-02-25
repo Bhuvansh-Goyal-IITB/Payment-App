@@ -18,7 +18,7 @@ function FormError({ elementList, errorComponent: ErrorComponent }) {
   }, [elementList]);
 
   return (
-    <div ref={containerRef} className="relative overflow-clip">
+    <div ref={containerRef} className="relative overflow-clip animate-height">
       {elementList.map(({ condition, message }, index) => (
         <ErrorComponent
           key={index}
