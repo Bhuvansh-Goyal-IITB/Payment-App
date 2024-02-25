@@ -1,6 +1,6 @@
 import { Router } from "express";
 import mongoose from "mongoose";
-import { Account, User, connectToDB } from "../db/db.js";
+import { Account, User } from "../db/db.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { authMiddleware } from "../middlewares.js";
@@ -10,13 +10,11 @@ const userRouter = Router();
 
 userRouter.get("/profile/:id", authMiddleware, async (req, res) => {
   try {
-    await connectToDB();
-
     const user = await User.findOne(
       {
         _id: req.params.id,
       },
-      ["email", "firstName", "lastName"],
+      ["email", "firstName", "lastName"]
     );
 
     if (!user) {
@@ -37,8 +35,6 @@ userRouter.get("/profile/:id", authMiddleware, async (req, res) => {
 
 userRouter.get("/profile", authMiddleware, async (req, res) => {
   try {
-    await connectToDB();
-
     const user = await User.aggregate([
       {
         $match: {
@@ -89,8 +85,6 @@ userRouter.get("/logout", authMiddleware, async (_req, res) => {
 
 userRouter.get("/bulk", authMiddleware, async (req, res) => {
   try {
-    await connectToDB();
-
     const query = req.query.filter || "";
 
     const users = await User.aggregate([
@@ -138,8 +132,6 @@ userRouter.get("/bulk", authMiddleware, async (req, res) => {
 
 userRouter.put("/", authMiddleware, async (req, res) => {
   try {
-    await connectToDB();
-
     const { password, firstName, lastName } = req.body;
 
     if (!password && !firstName && !lastName) {
@@ -162,7 +154,7 @@ userRouter.put("/", authMiddleware, async (req, res) => {
       {
         new: true,
         runValidators: true,
-      },
+      }
     );
 
     if (!user) {
@@ -188,8 +180,6 @@ userRouter.put("/", authMiddleware, async (req, res) => {
 
 userRouter.post("/signup", async (req, res) => {
   try {
-    await connectToDB();
-
     const { email, password, firstName, lastName } = req.body;
 
     if (!email) {
@@ -270,8 +260,6 @@ userRouter.post("/signup", async (req, res) => {
 
 userRouter.post("/login", async (req, res) => {
   try {
-    await connectToDB();
-
     const { email, password } = req.body;
 
     if (!email || !password) {

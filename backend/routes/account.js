@@ -1,13 +1,12 @@
 import { Router } from "express";
 import { authMiddleware } from "../middlewares.js";
-import { Account, Transaction, connectToDB } from "../db/db.js";
+import { Account, Transaction } from "../db/db.js";
 import mongoose from "mongoose";
 
 const accountRouter = Router();
 
 accountRouter.get("/balance", authMiddleware, async (req, res) => {
   try {
-    await connectToDB();
     const account = await Account.findOne({
       user: req.userId,
     });
@@ -31,8 +30,6 @@ accountRouter.get("/balance", authMiddleware, async (req, res) => {
 
 accountRouter.get("/bulk/transaction", authMiddleware, async (req, res) => {
   try {
-    await connectToDB();
-
     const query = req.query.filter || "";
 
     const transactions = await Account.aggregate([
@@ -169,8 +166,6 @@ accountRouter.get("/bulk/transaction", authMiddleware, async (req, res) => {
 
 accountRouter.post("/transfer", authMiddleware, async (req, res) => {
   try {
-    await connectToDB();
-
     const { to, amount } = req.body;
 
     if (amount % 1 != 0) {
@@ -234,7 +229,6 @@ accountRouter.post("/transfer", authMiddleware, async (req, res) => {
       message: "Transfer successful.",
     });
   } catch (error) {
-    console.log(error);
     return res.status(500).json({
       message: "Internal Server Error.",
     });

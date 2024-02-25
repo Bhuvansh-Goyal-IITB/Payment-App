@@ -3,17 +3,20 @@ import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import { rootRouter } from "./routes/index.js";
 import cors from "cors";
+import { connectToDB } from "./db/db.js";
 
 dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 3000;
 
+connectToDB();
+
 app.use(
   cors({
     credentials: true,
     origin: process.env.FRONTEND_URL || "http://localhost:5173",
-  }),
+  })
 );
 
 app.use(express.json());
