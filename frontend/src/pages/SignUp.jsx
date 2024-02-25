@@ -44,7 +44,7 @@ function SignUp() {
   return (
     <Backdrop>
       <CustomForm onSubmit={handleSubmit(onSubmit)}>
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-2 px-2">
           <LargeText>Sign Up</LargeText>
           <SmallText>Enter your information to create an account</SmallText>
           <div className="flex flex-col gap-1">

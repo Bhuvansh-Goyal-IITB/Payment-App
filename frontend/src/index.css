@@ -26,6 +26,10 @@ body {
     transition: height 100ms ease;
   }
 
+  .animate-spinner-popout {
+    transition: transform 100ms ease-in-out;
+  }
+
   .bg {
     @apply dark:bg-[#444] bg-[#CCC];
   }

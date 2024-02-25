@@ -37,28 +37,22 @@ function UserList({ debouncedQuery, query }) {
     };
   }, [query]);
 
-  if (initialLoad) {
-    return (
-      <div className="scroll-m-0 rounded-md shadow-md divide-neutral-200 dark:divide-neutral-700 divide-y flex flex-col scrollbar-hide overflow-y-scroll">
-        {Array.from({ length: 10 }).map((_, index) => (
-          <ListItemLoader key={index} />
-        ))}
-      </div>
-    );
-  }
-
   return (
     <div className="divide-neutral-200 dark:divide-neutral-700 divide-y flex flex-col">
-      {users.map(({ email, firstName, lastName, _id }) => (
-        <UserListItem
-          key={_id}
-          id={_id}
-          stale={query != debouncedQuery ? true : queryLoad}
-          firstName={firstName}
-          lastName={lastName}
-          email={email}
-        />
-      ))}
+      {initialLoad
+        ? Array.from({ length: 10 }).map((_, index) => (
+            <ListItemLoader key={index} />
+          ))
+        : users.map(({ email, firstName, lastName, _id }) => (
+            <UserListItem
+              key={_id}
+              id={_id}
+              stale={query != debouncedQuery ? true : queryLoad}
+              firstName={firstName}
+              lastName={lastName}
+              email={email}
+            />
+          ))}
     </div>
   );
 }

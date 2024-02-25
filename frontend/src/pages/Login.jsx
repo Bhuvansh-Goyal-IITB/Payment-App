@@ -44,7 +44,7 @@ function Login() {
   return (
     <Backdrop>
       <CustomForm onSubmit={handleSubmit(onSubmit)} noValidate={true}>
-        <div className="light flex flex-col justify-center gap-3">
+        <div className="light flex flex-col justify-center gap-3 px-2">
           <LargeText>Login</LargeText>
           <SmallText>Enter your credentials to access your account</SmallText>
           <div className="flex flex-col gap-1">
