@@ -173,9 +173,9 @@ accountRouter.post("/transfer", authMiddleware, async (req, res) => {
 
     const { to, amount } = req.body;
 
-    if ((amount * 100) % 1 != 0) {
+    if (amount % 1 != 0) {
       return res.status(400).json({
-        message: "Amount can only be upto 2 decimal places.",
+        message: "Invalid amount.",
       });
     }
 
@@ -219,12 +219,12 @@ accountRouter.post("/transfer", authMiddleware, async (req, res) => {
 
     await Account.findOneAndUpdate(
       { user: req.userId },
-      { $inc: { balance: -amount }, $push: { transactions: transaction } },
+      { $inc: { balance: -amount }, $push: { transactions: transaction } }
     ).session(session);
 
     await Account.findOneAndUpdate(
       { user: to },
-      { $inc: { balance: amount }, $push: { transactions: transaction } },
+      { $inc: { balance: amount }, $push: { transactions: transaction } }
     ).session(session);
 
     await session.commitTransaction();
@@ -234,6 +234,7 @@ accountRouter.post("/transfer", authMiddleware, async (req, res) => {
       message: "Transfer successful.",
     });
   } catch (error) {
+    console.log(error);
     return res.status(500).json({
       message: "Internal Server Error.",
     });

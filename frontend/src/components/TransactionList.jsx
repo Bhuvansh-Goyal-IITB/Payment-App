@@ -4,6 +4,7 @@ import axios from "axios";
 import ListItemLoader from "./ListItemLoader";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { CreditCardIcon } from "@heroicons/react/24/solid";
 
 function TransactionList({ query, debouncedQuery }) {
   let [transactions, setTransactions] = useState([]);
@@ -25,7 +26,6 @@ function TransactionList({ query, debouncedQuery }) {
         setInitialLoad(false);
       })
       .catch((error) => {
-        console.log("hi");
         if (error.response?.status == 403) {
           localStorage.removeItem("loggedin");
           toast("Session Timed Out!");
@@ -49,18 +49,30 @@ function TransactionList({ query, debouncedQuery }) {
   }
 
   return (
-    <div className="scroll-m-0 rounded-md shadow-md divide-neutral-200 dark:divide-neutral-700 divide-y flex flex-col scrollbar-hide overflow-y-scroll">
-      {transactions.map(({ amount, timestamp, user, received, _id }) => (
-        <TransactionItem
-          key={_id}
-          stale={query != debouncedQuery ? true : queryLoad}
-          user={user}
-          received={received}
-          amount={amount}
-          timestamp={timestamp}
-        />
-      ))}
-    </div>
+    <>
+      <div className="scroll-m-0 rounded-md shadow-md divide-neutral-200 dark:divide-neutral-700 divide-y flex flex-col scrollbar-hide overflow-y-scroll">
+        {transactions.map(({ amount, timestamp, user, received, _id }) => (
+          <TransactionItem
+            key={_id}
+            stale={query != debouncedQuery ? true : queryLoad}
+            user={user}
+            received={received}
+            amount={amount}
+            timestamp={timestamp}
+          />
+        ))}
+      </div>
+      {transactions.length == 0 && (
+        <div className="flex flex-col items-center item-bg text rounded-md shadow-md p-2 py-8">
+          <div className="flex gap-4 items-center text">
+            <CreditCardIcon className="w-8 h-8 inline" />
+            <span className="text-3xl font-serif">
+              You have not made any transactions...
+            </span>
+          </div>
+        </div>
+      )}
+    </>
   );
 }
 

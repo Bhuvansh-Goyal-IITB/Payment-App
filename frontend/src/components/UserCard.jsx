@@ -1,5 +1,8 @@
 import { memo } from "react";
 import LogoCard from "./LogoCard";
+import { MoonIcon } from "@heroicons/react/24/solid";
+import SimpleButton from "./SimpleButton";
+import ThemeSwitcher from "./ThemeSwitcher";
 
 const UserCard = memo(({ balance, firstName, lastName, email }) => {
   return (
@@ -9,12 +12,19 @@ const UserCard = memo(({ balance, firstName, lastName, email }) => {
       </div>
       <div className="grow flex flex-col gap-4 pl-4">
         <div className="flex flex-col font-serif text-left ">
-          <div>
-            <div className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl">
-              {firstName} {lastName}
+          <div className="flex justify-between">
+            <div className="flex flex-col">
+              <div className="text-xl md:text-3xl lg:text-4xl xl:text-5xl">
+                {firstName} {lastName}
+              </div>
+              <div className="text-left text-xs md:text-md lg:text-lg xl:text-xl text-neutral-400">
+                {email}
+              </div>
             </div>
-            <div className="text-left text-sm md:text-md lg:text-lg xl:text-xl text-neutral-400">
-              {email}
+            <div className="hidden sm:block text">
+              <div>
+                <ThemeSwitcher />
+              </div>
             </div>
           </div>
         </div>
@@ -47,7 +57,7 @@ const UserCard = memo(({ balance, firstName, lastName, email }) => {
                   clipRule="evenodd"
                 />
               </svg>
-              {parseFloat(balance).toFixed(2)}
+              {parseFloat(balance / 100).toFixed(2)}
             </div>
           )}
         </div>

@@ -9,6 +9,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import TabButton from "./TabButton";
+import ThemeSwitcher from "./ThemeSwitcher";
 
 export function Navbar() {
   const navigate = useNavigate();
@@ -60,6 +61,9 @@ export function Navbar() {
             <div className="hidden sm:block">Logout</div>
           </div>
         </SimpleButton>
+        <div className="sm:hidden">
+          <ThemeSwitcher />
+        </div>
       </div>
     </div>
   );

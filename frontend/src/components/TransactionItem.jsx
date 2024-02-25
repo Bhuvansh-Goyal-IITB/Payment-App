@@ -16,9 +16,11 @@ function TransactionItem({
           {formatDate(timestamp)}
         </div>
         <div
-          className={`${received ? "text-green-500" : "text-red-500"} flex font-bold items-center text-lg xl:text-xl p-2`}
+          className={`${
+            received ? "text-green-500" : "text-red-500"
+          } flex font-bold items-center text-lg xl:text-xl p-2`}
         >
-          {received ? "+" : "-"} ₹{parseFloat(amount).toFixed(2)}
+          {received ? "+" : "-"} ₹{parseFloat(amount / 100).toFixed(2)}
         </div>
       </div>
 

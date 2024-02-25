@@ -34,6 +34,7 @@ function Transfer() {
 
   async function onSubmit(data) {
     data.to = userId;
+    data.amount = data.amount * 100;
     try {
       await axios.post("/api/v1/account/transfer", data);
       toast.success("Transfer successfull!");
