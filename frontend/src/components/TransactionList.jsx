@@ -65,8 +65,8 @@ function TransactionList({ query, debouncedQuery }) {
       {transactions.length == 0 && (
         <div className="flex flex-col items-center item-bg text rounded-md shadow-md p-2 py-8">
           <div className="flex gap-4 items-center text">
-            <CreditCardIcon className="w-8 h-8 inline" />
-            <span className="text-3xl font-serif">
+            <CreditCardIcon className="w-6 h-6 sm:w-8 sm:h-8 inline" />
+            <span className="text-sm min-[450]:text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl font-serif">
               You have not made any transactions...
             </span>
           </div>

@@ -5,7 +5,7 @@ function SpinnerText({ loading, children }) {
         <div className="absolute overflow-clip -left-5 w-4 h-4">
           <div
             aria-hidden={!loading}
-            className="animate-spinner-popout translate-x-0 aria-hidden:translate-x-4"
+            className="animate-spinner-popout translate-x-0 aria-hidden:translate-x-5"
           >
             <div className="h-4 w-4 rounded-full animate-spin border-[2px] dark:border-neutral-900 border-neutral-100 border-t-transparent dark:border-t-transparent" />
           </div>
