@@ -9,7 +9,7 @@ function UserInfo({ firstName, lastName, email }) {
         <div className="text-xs md:text-base lg:text-lg xl:text-xl">
           {firstName} {lastName}
         </div>
-        <div className="w-[100px] min-[450px]:w-full overflow-hidden whitespace-nowrap overflow-ellipsis text-xs md:text-sm text-neutral-400">
+        <div className="max-[450px]:w-[100px] overflow-hidden whitespace-nowrap overflow-ellipsis text-xs md:text-sm text-neutral-400">
           {email}
         </div>
       </div>
