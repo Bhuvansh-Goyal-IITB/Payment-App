@@ -230,12 +230,20 @@ userRouter.post("/signup", async (req, res) => {
       expiresIn: JWT_EXPIRY_TIME,
     });
 
-    res.cookie("jwt", token, {
-      secure: true,
-      sameSite: "none",
+    let cookieOptions = {
       httpOnly: true,
       maxAge: COOKIE_EXPIRY_SECONDS * 1000,
-    });
+    };
+
+    if (process.env.PRODUCTION) {
+      cookieOptions = {
+        ...cookieOptions,
+        secure: true,
+        sameSite: "none",
+      };
+    }
+
+    res.cookie("jwt", token, cookieOptions);
 
     return res.json({
       message: "User created successfully.",
@@ -291,12 +299,21 @@ userRouter.post("/login", async (req, res) => {
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
       expiresIn: JWT_EXPIRY_TIME,
     });
-    res.cookie("jwt", token, {
-      secure: true,
-      sameSite: "none",
+
+    let cookieOptions = {
       httpOnly: true,
       maxAge: COOKIE_EXPIRY_SECONDS * 1000,
-    });
+    };
+
+    if (process.env.PRODUCTION) {
+      cookieOptions = {
+        ...cookieOptions,
+        secure: true,
+        sameSite: "none",
+      };
+    }
+
+    res.cookie("jwt", token, cookieOptions);
 
     return res.json({
       message: "User logged in.",
