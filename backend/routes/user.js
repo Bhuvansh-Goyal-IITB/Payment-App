@@ -232,6 +232,7 @@ userRouter.post("/signup", async (req, res) => {
 
     res.cookie("jwt", token, {
       secure: true,
+      sameSite: "none",
       httpOnly: true,
       maxAge: COOKIE_EXPIRY_SECONDS * 1000,
     });
@@ -292,6 +293,7 @@ userRouter.post("/login", async (req, res) => {
     });
     res.cookie("jwt", token, {
       secure: true,
+      sameSite: "none",
       httpOnly: true,
       maxAge: COOKIE_EXPIRY_SECONDS * 1000,
     });
