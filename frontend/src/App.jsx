@@ -13,6 +13,7 @@ import Transactions from "./pages/Transactions.jsx";
 import Transfer from "./pages/Transfer.jsx";
 import Edit from "./pages/Edit.jsx";
 import GlobalError from "./components/GlobalError.jsx";
+import { useEffect } from "react";
 
 axios.defaults.baseURL =
   import.meta.env.VITE_BACKEND_URL || "http://localhost:3000";
@@ -70,6 +71,19 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
+  const isSystemThemeDark = () =>
+    window.matchMedia("(prefers-color-scheme: dark)").matches;
+
+  useEffect(() => {
+    if (isSystemThemeDark) {
+      document.body.classList.remove("light", "dark");
+      document.body.classList.add("dark");
+    } else {
+      document.body.classList.remove("light", "dark");
+      document.body.classList.add("light");
+    }
+  }, []);
+
   return (
     <>
       <Toaster />
