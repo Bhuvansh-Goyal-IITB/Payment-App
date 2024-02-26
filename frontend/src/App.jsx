@@ -14,7 +14,8 @@ import Transfer from "./pages/Transfer.jsx";
 import Edit from "./pages/Edit.jsx";
 import GlobalError from "./components/GlobalError.jsx";
 
-axios.defaults.baseURL = import.meta.env.BACKEND_URL || "http://localhost:3000";
+axios.defaults.baseURL =
+  import.meta.env.VITE_BACKEND_URL || "http://localhost:3000";
 axios.defaults.withCredentials = true;
 
 const router = createBrowserRouter([
